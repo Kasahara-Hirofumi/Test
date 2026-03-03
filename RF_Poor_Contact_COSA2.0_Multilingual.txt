@@ -1,0 +1,162 @@
+RF Poor-Contact Case on COSA2.0 — Multilingual Presentation Script
+
+================================================================================
+
+① Intro
+
+[English]
+
+I'd like to share an RF poor-contact case we saw on COSA2.0.
+
+[日本語]
+
+COSA2.0で発生したRF接触不良の事例を共有させていただきます。
+
+[カタカナ発音ガイド / English Pronunciation Guide]
+
+アイド ライク トゥ シェア アン アールエフ プアコンタクト ケース ウィー ソー オン コーサ ツーポイントゼロ.
+
+================================================================================
+
+② Background
+
+[English]
+
+COSA2.0 uses a BGA package, and we have seen persistent measurement failures caused by RF continuity-pin wear.
+We are concerned that the same issue could also occur in the Optical Engine (OE), so before mass production, we think it is important to verify durability against pin wear through repeated measurements.
+
+Today, I will introduce the RF poor-contact cases from COSA2.0.
+
+(Note)
+COSA2.0 uses BGA, while the OE uses LGA — a structural difference. However, poor contact due to pin wear can also occur with LGA.
+
+[日本語]
+
+COSA2.0はBGAパッケージを使用しており、RF導通ピンの摩耗による測定不良が継続的に発生しています。
+同様の問題がOptical Engine（OE）でも発生する可能性があるため、量産前に繰り返し測定によるピン摩耗への耐久性を検証することが重要だと考えています。
+
+本日は、COSA2.0におけるRF接触不良の事例をご紹介します。
+
+（注記）
+COSA2.0はBGA、OEはLGAを使用しており、構造上の違いがあります。ただし、ピン摩耗による接触不良はLGAでも発生する可能性があります。
+
+[カタカナ発音ガイド / English Pronunciation Guide]
+
+コーサ ツーポイントゼロ ユーゼズ ア ビージーエー パッケージ, アンド ウィー ハヴ シーン パーシステント メジャメント フェイリャーズ コーズド バイ アールエフ コンティニュイティ ピン ウェア.
+ウィー アー コンサーンド ザット ザ セイム イシュー クッド オールソー オカー イン ジ オプティカル エンジン (オーイー), ソー ビフォー マス プロダクション, ウィー シンク イット イズ インポータント トゥ ヴェリファイ デュラビリティ アゲンスト ピン ウェア スルー リピーテッド メジャメンツ.
+
+トゥデイ, アイ ウィル イントロデュース ジ アールエフ プアコンタクト ケーセズ フロム コーサ ツーポイントゼロ.
+
+(ノート)
+コーサ ツーポイントゼロ ユーゼズ ビージーエー, ワイル ジ オーイー ユーゼズ エルジーエー — ア ストラクチュラル ディファレンス. ハウエヴァー, プア コンタクト デュー トゥ ピン ウェア キャン オールソー オカー ウィズ エルジーエー.
+
+================================================================================
+
+③ Socket shape
+
+[English]
+
+This is the COSA2.0 socket shape. The socket is on the left, and the module is mounted by pressing the cap from the top.
+
+[日本語]
+
+こちらがCOSA2.0のソケット形状です。左側がソケットで、上からキャップを押してモジュールを装着します。
+
+[カタカナ発音ガイド / English Pronunciation Guide]
+
+ディス イズ ザ コーサ ツーポイントゼロ ソケット シェイプ. ザ ソケット イズ オン ザ レフト, アンド ザ モジュール イズ マウンテッド バイ プレッシング ザ キャップ フロム ザ トップ.
+
+================================================================================
+
+④ Example of RF gain measurement failure (OE)
+
+[English]
+
+This is an example of RF gain measurement failure.
+With a new BGA socket, most measurements look like the top waveform. As the socket pins wear, distorted waveforms like the lower plots become more frequent — especially in the OE.
+
+[日本語]
+
+こちらはRFゲイン測定不良の例です。
+新しいBGAソケットでは、ほとんどの測定が上段の波形のようになります。ソケットピンが摩耗するにつれて、下段のような歪んだ波形が増加します — 特にOEにおいて顕著です。
+
+[カタカナ発音ガイド / English Pronunciation Guide]
+
+ディス イズ アン イグザンプル オヴ アールエフ ゲイン メジャメント フェイリャー.
+ウィズ ア ニュー ビージーエー ソケット, モースト メジャメンツ ルック ライク ザ トップ ウェイヴフォーム. アズ ザ ソケット ピンズ ウェア, ディストーテッド ウェイヴフォームズ ライク ザ ロウワー プロッツ ビカム モア フリークウェント — エスペシャリー イン ジ オーイー.
+
+================================================================================
+
+⑤ Example (EO)
+
+[English]
+
+This is another example, for EO.
+The trend is the same: a new socket shows a clean waveform, and pin wear increases distortion.
+
+[日本語]
+
+こちらはEOの別の例です。
+傾向は同じで、新しいソケットではきれいな波形が得られますが、ピン摩耗により歪みが増加します。
+
+[カタカナ発音ガイド / English Pronunciation Guide]
+
+ディス イズ アナザー イグザンプル, フォー イーオー.
+ザ トレンド イズ ザ セイム: ア ニュー ソケット ショーズ ア クリーン ウェイヴフォーム, アンド ピン ウェア インクリーセズ ディストーション.
+
+================================================================================
+
+⑥ Error rate before / after socket replacement + current operation rules
+
+[English]
+
+This slide shows the RF waveform error rate before and after socket replacement.
+This dataset is from the worst period during COSA inspection — 100 units were measured and the error rate was plotted.
+
+After replacement, some series improve, but others show little or no change.
+When it improves, the defect rate drops to around 5–10%. If there is little change, we think the issue was not only the socket but also the measurement system.
+
+Possible causes include debris that cannot be fully removed by cleaning, continuity-pin wear, and misalignment due to socket-to-socket variation.
+
+Based on these findings, COSA2.0 is currently operated with these rules:
+
+- For each measurement, blow air inside the socket and over the board.
+- Disassemble and clean the socket every 200 measurements.
+
+That's all. Thank you.
+
+[日本語]
+
+このスライドは、ソケット交換前後のRF波形エラー率を示しています。
+このデータはCOSA検査中の最悪期のもので、100台を測定してエラー率をプロットしました。
+
+交換後に改善するシリーズもありますが、ほとんど変化しないものもあります。
+改善する場合、不良率は約5〜10%まで低下します。変化がほとんどない場合は、ソケットだけでなく測定系にも問題があると考えています。
+
+考えられる原因としては、クリーニングで完全に除去できないゴミ、導通ピンの摩耗、ソケット個体差による位置ずれなどがあります。
+
+これらの知見に基づき、COSA2.0では現在以下のルールで運用しています：
+
+- 各測定時にソケット内部および基板上にエアーを吹き付ける。
+- 200回測定ごとにソケットを分解・清掃する。
+
+以上です。ありがとうございました。
+
+[カタカナ発音ガイド / English Pronunciation Guide]
+
+ディス スライド ショーズ ジ アールエフ ウェイヴフォーム エラー レイト ビフォー アンド アフター ソケット リプレイスメント.
+ディス データセット イズ フロム ザ ワースト ピリオド デュアリング コーサ インスペクション — ワン ハンドレッド ユニッツ ワー メジャード アンド ジ エラー レイト ワズ プロッテッド.
+
+アフター リプレイスメント, サム シリーズ インプルーヴ, バット アザーズ ショー リトル オア ノー チェインジ.
+ウェン イット インプルーヴズ, ザ ディフェクト レイト ドロップス トゥ アラウンド ファイヴ トゥ テン パーセント. イフ ゼア イズ リトル チェインジ, ウィー シンク ジ イシュー ワズ ノット オンリー ザ ソケット バット オールソー ザ メジャメント システム.
+
+ポッシブル コーゼズ インクルード デブリー ザット キャノット ビー フリー リムーヴド バイ クリーニング, コンティニュイティ ピン ウェア, アンド ミスアラインメント デュー トゥ ソケット トゥ ソケット ヴァリエイション.
+
+ベイスト オン ジーズ ファインディングズ, コーサ ツーポイントゼロ イズ カレントリー オペレイテッド ウィズ ジーズ ルールズ:
+
+- フォー イーチ メジャメント, ブロー エア インサイド ザ ソケット アンド オーヴァー ザ ボード.
+- ディスアセンブル アンド クリーン ザ ソケット エヴリ トゥー ハンドレッド メジャメンツ.
+
+ザッツ オール. サンキュー.
+
+================================================================================
