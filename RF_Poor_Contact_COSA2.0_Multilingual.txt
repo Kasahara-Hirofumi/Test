@@ -111,7 +111,7 @@ The trend is the same: a new socket shows a clean waveform, and pin wear increas
 [English]
 
 This slide shows the RF waveform error rate before and after socket replacement.
-This dataset is from the worst period during COSA inspection — each plot shows an error rate with 100 units as the denominator.
+This dataset is from the worst period during COSA inspection — each plot represents an error rate calculated with 100 units as the denominator.
 
 After replacement, some series improve, but others show little or no change.
 When it improves, the defect rate drops to around 5–10%. If there is little change, we think the issue was not only the socket but also the measurement system.
@@ -128,7 +128,7 @@ That's all. Thank you.
 [日本語]
 
 このスライドは、ソケット交換前後のRF波形エラー率を示しています。
-このデータはCOSA検査中の最悪期のもので、ひとつのプロットが100台を母数としたエラー率になっています。
+このデータはCOSA検査中の最悪期のもので、各プロットは100台を母数として算出したエラー率を示しています。
 
 交換後に改善するシリーズもありますが、ほとんど変化しないものもあります。
 改善する場合、不良率は約5〜10%まで低下します。変化がほとんどない場合は、ソケットだけでなく測定系にも問題があると考えています。
@@ -145,7 +145,7 @@ That's all. Thank you.
 [カタカナ発音ガイド / English Pronunciation Guide]
 
 ディス スライド ショーズ, ジ RF ウェイヴフォーム エラー レイト, ビフォー アンド アフター ソケット リプレイスメント.
-ディス データセット イズ フロム ザ ワースト ピリオド, デュアリング COSA インスペクション — イーチ プロット ショーズ アン エラー レイト, ウィズ ワン ハンドレッド ユニッツ アズ ザ ディナミネイター.
+ディス データセット イズ フロム ザ ワースト ピリオド, デュアリング COSA インスペクション — イーチ プロット レプレゼンツ アン エラー レイト, カリキュレイテッド ウィズ ワン ハンドレッド ユニッツ アズ ザ ディナミネイター.
 
 アフター リプレイスメント, サム シリーズ インプルーヴ, バット アザーズ ショー リトル オア ノー チェインジ.
 ウェン イット インプルーヴズ, ザ ディフェクト レイト ドロップス トゥ アラウンド ファイヴ トゥ テン パーセント. イフ ゼア イズ リトル チェインジ, ウィー シンク ジ イシュー ワズ ノット オンリー ザ ソケット バット オールソー ザ メジャメント システム.
