@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>入国申請書 / Immigration Application Form</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      border: 2px solid #1a3a5c;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      background-color: #1a3a5c;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .header h2 {
+      font-size: 16px;
+      font-weight: normal;
+      opacity: 0.9;
+    }
+
+    .header .form-number {
+      font-size: 12px;
+      margin-top: 10px;
+      opacity: 0.7;
+    }
+
+    .form-body {
+      padding: 25px 30px;
+    }
+
+    .section-title {
+      background-color: #e8eef4;
+      border-left: 4px solid #1a3a5c;
+      padding: 8px 12px;
+      font-weight: bold;
+      font-size: 15px;
+      margin: 20px 0 15px 0;
+      color: #1a3a5c;
+    }
+
+    .section-title:first-child {
+      margin-top: 0;
+    }
+
+    .form-row {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      min-height: 45px;
+    }
+
+    .form-row:last-child {
+      border-bottom: none;
+    }
+
+    .form-label {
+      width: 200px;
+      min-width: 200px;
+      background-color: #f7f9fb;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      border-right: 1px solid #ddd;
+    }
+
+    .form-label .en {
+      display: block;
+      font-weight: normal;
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .form-value {
+      flex: 1;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-value input[type="text"],
+    .form-value input[type="date"],
+    .form-value select,
+    .form-value textarea {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-value textarea {
+      height: 60px;
+      resize: vertical;
+    }
+
+    .form-value input:focus,
+    .form-value select:focus,
+    .form-value textarea:focus {
+      outline: none;
+      border-color: #1a3a5c;
+      box-shadow: 0 0 3px rgba(26, 58, 92, 0.3);
+    }
+
+    .form-row-half {
+      display: flex;
+    }
+
+    .form-row-half .form-row {
+      flex: 1;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 5px;
+    }
+
+    .photo-box {
+      width: 120px;
+      height: 150px;
+      border: 2px dashed #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+
+    .photo-box:hover {
+      border-color: #1a3a5c;
+      color: #1a3a5c;
+    }
+
+    .notice {
+      background-color: #fff9e6;
+      border: 1px solid #f0d860;
+      padding: 12px 15px;
+      margin: 20px 0;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #665500;
+    }
+
+    .notice strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .signature-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid #1a3a5c;
+    }
+
+    .signature-box {
+      text-align: center;
+    }
+
+    .signature-line {
+      width: 250px;
+      border-bottom: 1px solid #333;
+      margin-bottom: 5px;
+      height: 40px;
+    }
+
+    .signature-box span {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .btn-area {
+      text-align: center;
+      padding: 20px;
+      background-color: #f7f9fb;
+      border-top: 1px solid #ddd;
+    }
+
+    .btn {
+      padding: 12px 40px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 10px;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background-color: #1a3a5c;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background-color: #2a5a8c;
+    }
+
+    .btn-secondary {
+      background-color: #fff;
+      color: #333;
+      border: 1px solid #ccc;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f0f0f0;
+    }
+
+    .required {
+      color: #cc0000;
+      font-size: 11px;
+      margin-left: 5px;
+    }
+
+    .stamp-area {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #999;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .container {
+        box-shadow: none;
+        margin: 0;
+      }
+
+      .btn-area {
+        display: none;
+      }
+
+      input, select, textarea {
+        border: none !important;
+        background: transparent !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+      }
+
+      .form-label {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+      }
+
+      .form-row-half {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>入 国 申 請 書</h1>
+    <h2>Immigration Application Form</h2>
+    <div class="form-number">様式第1号 / Form No.1（デモ用 / Demo）</div>
+  </div>
+
+  <form class="form-body" id="immigrationForm">
+
+    <!-- 1. 申請者情報 -->
+    <div class="section-title">1. 申請者情報 / Applicant Information</div>
+
+    <div class="form-row">
+      <div class="form-label">
+        氏名（漢字）<span class="required">※必須</span>
+        <span class="en">Full Name (Kanji)</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="name_kanji" placeholder="例：山田 太郎">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        氏名（ローマ字）<span class="required">※必須</span>
+        <span class="en">Full Name (Roman)</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="name_roman" placeholder="例：YAMADA TARO" style="text-transform: uppercase;">
+      </div>
+    </div>
+
+    <div class="form-row-half">
+      <div class="form-row">
+        <div class="form-label">
+          生年月日<span class="required">※必須</span>
+          <span class="en">Date of Birth</span>
+        </div>
+        <div class="form-value">
+          <input type="date" name="dob">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">
+          性別<span class="required">※必須</span>
+          <span class="en">Sex</span>
+        </div>
+        <div class="form-value">
+          <div class="radio-group">
+            <label><input type="radio" name="sex" value="male"> 男 / Male</label>
+            <label><input type="radio" name="sex" value="female"> 女 / Female</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        国籍<span class="required">※必須</span>
+        <span class="en">Nationality</span>
+      </div>
+      <div class="form-value">
+        <select name="nationality">
+          <option value="">-- 選択してください / Select --</option>
+          <option value="JP">日本 / Japan</option>
+          <option value="US">アメリカ / United States</option>
+          <option value="CN">中国 / China</option>
+          <option value="KR">韓国 / South Korea</option>
+          <option value="GB">イギリス / United Kingdom</option>
+          <option value="FR">フランス / France</option>
+          <option value="DE">ドイツ / Germany</option>
+          <option value="AU">オーストラリア / Australia</option>
+          <option value="BR">ブラジル / Brazil</option>
+          <option value="IN">インド / India</option>
+          <option value="other">その他 / Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        写真<br>
+        <span class="en">Photo</span>
+      </div>
+      <div class="form-value">
+        <div class="photo-box" onclick="document.getElementById('photoInput').click()">
+          縦4cm×横3cm<br>
+          4cm × 3cm<br><br>
+          クリックして<br>アップロード
+        </div>
+        <input type="file" id="photoInput" accept="image/*" style="display:none;">
+      </div>
+    </div>
+
+    <!-- 2. 旅券情報 -->
+    <div class="section-title">2. 旅券情報 / Passport Information</div>
+
+    <div class="form-row">
+      <div class="form-label">
+        旅券番号<span class="required">※必須</span>
+        <span class="en">Passport Number</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="passport_no" placeholder="例：TK1234567">
+      </div>
+    </div>
+
+    <div class="form-row-half">
+      <div class="form-row">
+        <div class="form-label">
+          旅券発行日
+          <span class="en">Date of Issue</span>
+        </div>
+        <div class="form-value">
+          <input type="date" name="passport_issue">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">
+          旅券有効期限
+          <span class="en">Date of Expiry</span>
+        </div>
+        <div class="form-value">
+          <input type="date" name="passport_expiry">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        発行地
+        <span class="en">Place of Issue</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="passport_place" placeholder="例：東京 / Tokyo">
+      </div>
+    </div>
+
+    <!-- 3. 渡航情報 -->
+    <div class="section-title">3. 渡航情報 / Travel Information</div>
+
+    <div class="form-row">
+      <div class="form-label">
+        入国目的<span class="required">※必須</span>
+        <span class="en">Purpose of Entry</span>
+      </div>
+      <div class="form-value">
+        <select name="purpose">
+          <option value="">-- 選択してください / Select --</option>
+          <option value="tourism">観光 / Tourism</option>
+          <option value="business">商用 / Business</option>
+          <option value="study">留学 / Study</option>
+          <option value="work">就労 / Work</option>
+          <option value="family">家族訪問 / Family Visit</option>
+          <option value="transit">通過 / Transit</option>
+          <option value="other">その他 / Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row-half">
+      <div class="form-row">
+        <div class="form-label">
+          入国予定日<span class="required">※必須</span>
+          <span class="en">Date of Entry</span>
+        </div>
+        <div class="form-value">
+          <input type="date" name="entry_date">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label">
+          滞在予定期間
+          <span class="en">Duration of Stay</span>
+        </div>
+        <div class="form-value">
+          <select name="duration">
+            <option value="">-- 選択 --</option>
+            <option value="7">7日以内 / Up to 7 days</option>
+            <option value="15">15日以内 / Up to 15 days</option>
+            <option value="30">30日以内 / Up to 30 days</option>
+            <option value="90">90日以内 / Up to 90 days</option>
+            <option value="180">180日以内 / Up to 180 days</option>
+            <option value="365">1年以内 / Up to 1 year</option>
+            <option value="over365">1年以上 / Over 1 year</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        搭乗便名
+        <span class="en">Flight / Vessel</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="flight" placeholder="例：JL001 / NH101">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        出発地
+        <span class="en">Departure City</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="departure_city" placeholder="例：ロサンゼルス / Los Angeles">
+      </div>
+    </div>
+
+    <!-- 4. 滞在先情報 -->
+    <div class="section-title">4. 滞在先情報 / Accommodation in Japan</div>
+
+    <div class="form-row">
+      <div class="form-label">
+        滞在先名称
+        <span class="en">Hotel / Address Name</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="accommodation_name" placeholder="例：東京ホテル / Tokyo Hotel">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        滞在先住所
+        <span class="en">Address</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="accommodation_address" placeholder="例：東京都千代田区丸の内1-1-1">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        電話番号
+        <span class="en">Phone Number</span>
+      </div>
+      <div class="form-value">
+        <input type="text" name="accommodation_phone" placeholder="例：03-1234-5678">
+      </div>
+    </div>
+
+    <!-- 5. 申告事項 -->
+    <div class="section-title">5. 申告事項 / Declaration</div>
+
+    <div class="notice">
+      <strong>以下の質問にお答えください / Please answer the following questions:</strong>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        過去に強制退去・出国命令を<br>受けたことがありますか？
+        <span class="en">Prior deportation?</span>
+      </div>
+      <div class="form-value">
+        <div class="radio-group">
+          <label><input type="radio" name="deportation" value="no"> いいえ / No</label>
+          <label><input type="radio" name="deportation" value="yes"> はい / Yes</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        刑事事件で有罪判決を<br>受けたことがありますか？
+        <span class="en">Criminal conviction?</span>
+      </div>
+      <div class="form-value">
+        <div class="radio-group">
+          <label><input type="radio" name="criminal" value="no"> いいえ / No</label>
+          <label><input type="radio" name="criminal" value="yes"> はい / Yes</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        所持品の中に持込み禁止品<br>がありますか？
+        <span class="en">Prohibited items?</span>
+      </div>
+      <div class="form-value">
+        <div class="radio-group">
+          <label><input type="radio" name="prohibited" value="no"> いいえ / No</label>
+          <label><input type="radio" name="prohibited" value="yes"> はい / Yes</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 署名 -->
+    <div class="signature-area">
+      <div class="signature-box">
+        <div class="signature-line"></div>
+        <span>申請者署名 / Applicant's Signature</span>
+      </div>
+      <div class="signature-box">
+        <div class="signature-line" style="width:150px;"></div>
+        <span>申請日 / Date</span>
+      </div>
+      <div class="stamp-area">
+        公印欄<br>Official Use
+      </div>
+    </div>
+
+  </form>
+
+  <div class="btn-area">
+    <button type="button" class="btn btn-secondary" onclick="resetForm()">リセット / Reset</button>
+    <button type="button" class="btn btn-primary" onclick="submitForm()">申請する / Submit</button>
+  </div>
+</div>
+
+<script>
+  function submitForm() {
+    const form = document.getElementById('immigrationForm');
+    const requiredFields = [
+      { name: 'name_kanji', label: '氏名（漢字）' },
+      { name: 'name_roman', label: '氏名（ローマ字）' },
+      { name: 'dob', label: '生年月日' },
+      { name: 'passport_no', label: '旅券番号' },
+      { name: 'entry_date', label: '入国予定日' }
+    ];
+
+    const requiredSelects = [
+      { name: 'nationality', label: '国籍' },
+      { name: 'purpose', label: '入国目的' }
+    ];
+
+    const requiredRadios = [
+      { name: 'sex', label: '性別' }
+    ];
+
+    let missing = [];
+
+    requiredFields.forEach(f => {
+      if (!form.elements[f.name].value.trim()) missing.push(f.label);
+    });
+
+    requiredSelects.forEach(f => {
+      if (!form.elements[f.name].value) missing.push(f.label);
+    });
+
+    requiredRadios.forEach(f => {
+      const radios = form.elements[f.name];
+      let checked = false;
+      for (let r of radios) {
+        if (r.checked) { checked = true; break; }
+      }
+      if (!checked) missing.push(f.label);
+    });
+
+    if (missing.length > 0) {
+      alert('以下の必須項目を入力してください:\n' + missing.join('\n'));
+      return;
+    }
+
+    alert('申請を受け付けました。\nApplication submitted successfully.\n\n※これはデモです。実際の申請ではありません。\n※This is a demo. Not an actual application.');
+  }
+
+  function resetForm() {
+    if (confirm('入力内容をリセットしますか？\nReset all fields?')) {
+      document.getElementById('immigrationForm').reset();
+    }
+  }
+</script>
+
+</body>
+</html>
