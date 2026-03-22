@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header">
+    <h2>集計画面</h2>
+    <p>月別とカテゴリ別の集計結果を表示します。</p>
+</section>
+
+<section class="summary-grid">
+    <article class="card">
+        <h3>月別集計</h3>
+        {% if monthly_rows %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>月</th>
+                        <th>収入</th>
+                        <th>支出</th>
+                        <th>差額</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in monthly_rows %}
+                    <tr>
+                        <td>{{ row.month }}</td>
+                        <td>¥{{ "{:,}".format(row.income) }}</td>
+                        <td>¥{{ "{:,}".format(row.expense) }}</td>
+                        <td>¥{{ "{:,}".format(row.balance) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty">集計対象データがありません。</p>
+        {% endif %}
+    </article>
+
+    <article class="card">
+        <h3>カテゴリ別集計（支出）</h3>
+        {% if category_rows %}
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>カテゴリ</th>
+                        <th>合計金額</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in category_rows %}
+                    <tr>
+                        <td>{{ row.category }}</td>
+                        <td>¥{{ "{:,}".format(row.total) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="empty">支出データがありません。</p>
+        {% endif %}
+    </article>
+</section>
+{% endblock %}

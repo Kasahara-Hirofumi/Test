@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header">
+    <h2>トップ画面</h2>
+    <p>{{ month_label }} の収支サマリー</p>
+</section>
+
+<section class="card-grid">
+    <article class="card">
+        <h3>収入合計</h3>
+        <p class="amount income">¥{{ "{:,}".format(summary.income) }}</p>
+    </article>
+    <article class="card">
+        <h3>支出合計</h3>
+        <p class="amount expense">¥{{ "{:,}".format(summary.expense) }}</p>
+    </article>
+    <article class="card">
+        <h3>差額</h3>
+        <p class="amount {{ 'income' if summary.balance >= 0 else 'expense' }}">¥{{ "{:,}".format(summary.balance) }}</p>
+    </article>
+</section>
+
+<section class="action-row">
+    <a class="btn" href="/transactions/new">収支を登録する</a>
+    <a class="btn btn-subtle" href="/summary">集計を見る</a>
+</section>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header">
+    <h2>{{ title }}</h2>
+    <p>必要項目を入力して保存してください。</p>
+</section>
+
+{% if errors %}
+<div class="alert alert-error">
+    <ul>
+        {% for err in errors %}
+        <li>{{ err }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<form method="post" action="{{ action_url }}" class="form-card">
+    <label>
+        日付
+        <input type="date" name="date" value="{{ form_data.date }}" required>
+    </label>
+
+    <label>
+        区分
+        <select name="type" id="type-select" required>
+            <option value="income" {% if form_data.type == 'income' %}selected{% endif %}>収入</option>
+            <option value="expense" {% if form_data.type == 'expense' %}selected{% endif %}>支出</option>
+        </select>
+    </label>
+
+    <label>
+        カテゴリ
+        <select name="category" id="category-select" required></select>
+    </label>
+
+    <label>
+        金額
+        <input type="number" name="amount" min="1" step="1" value="{{ form_data.amount }}" required>
+    </label>
+
+    <label>
+        メモ
+        <textarea name="memo" rows="3" maxlength="255" placeholder="任意">{{ form_data.memo }}</textarea>
+    </label>
+
+    <div class="action-row">
+        <button type="submit" class="btn">{{ submit_label }}</button>
+        <a href="/transactions" class="btn btn-subtle">一覧へ戻る</a>
+    </div>
+</form>
+
+<script>
+    const categoryMap = {
+        income: {{ income_categories | tojson }},
+        expense: {{ expense_categories | tojson }}
+    };
+    const typeSelect = document.getElementById("type-select");
+    const categorySelect = document.getElementById("category-select");
+    const selectedCategory = "{{ form_data.category }}";
+
+    function renderCategories(typeValue) {
+        const categories = categoryMap[typeValue] || [];
+        categorySelect.innerHTML = "";
+        categories.forEach((category) => {
+            const option = document.createElement("option");
+            option.value = category;
+            option.textContent = category;
+            if (category === selectedCategory) {
+                option.selected = true;
+            }
+            categorySelect.appendChild(option);
+        });
+    }
+
+    typeSelect.addEventListener("change", () => {
+        renderCategories(typeSelect.value);
+    });
+
+    renderCategories(typeSelect.value);
+</script>
+{% endblock %}

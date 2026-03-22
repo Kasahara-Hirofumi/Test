@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else "デモ用 家計簿アプリ" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>デモ用 家計簿アプリ</h1>
+            <nav class="site-nav">
+                <a href="/">トップ</a>
+                <a href="/transactions/new">登録</a>
+                <a href="/transactions">一覧</a>
+                <a href="/summary">集計</a>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        {% if general_error %}
+            <div class="alert alert-error">{{ general_error }}</div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

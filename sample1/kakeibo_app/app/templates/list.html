@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-header">
+    <h2>収支一覧</h2>
+    <p>登録済みデータを日付順で表示しています。</p>
+</section>
+
+{% if transactions %}
+<div class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>区分</th>
+                <th>カテゴリ</th>
+                <th>金額</th>
+                <th>メモ</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in transactions %}
+            <tr>
+                <td>{{ item.date }}</td>
+                <td>{{ type_labels[item.type] }}</td>
+                <td>{{ item.category }}</td>
+                <td>¥{{ "{:,}".format(item.amount) }}</td>
+                <td>{{ item.memo if item.memo else "-" }}</td>
+                <td class="actions">
+                    <a class="btn btn-small" href="/transactions/{{ item.id }}/edit">編集</a>
+                    <form method="post" action="/transactions/{{ item.id }}/delete" onsubmit="return confirm('削除しますか？');">
+                        <button type="submit" class="btn btn-danger btn-small">削除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="empty">まだデータがありません。<a href="/transactions/new">こちら</a>から登録してください。</p>
+{% endif %}
+{% endblock %}
