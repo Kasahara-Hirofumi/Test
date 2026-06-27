@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>就労申請 管理 / Work Permit Applications</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      border: 2px solid #1a3a5c;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      background-color: #1a3a5c;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .header h2 {
+      font-size: 16px;
+      font-weight: normal;
+      opacity: 0.9;
+    }
+
+    .header .form-number {
+      font-size: 12px;
+      margin-top: 10px;
+      opacity: 0.7;
+    }
+
+    .body-area {
+      padding: 25px 30px;
+    }
+
+    /* ===== Toolbar (filter tabs + new button) ===== */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 6px 14px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 20px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .tab.active {
+      background-color: #1a3a5c;
+      color: #fff;
+      border-color: #1a3a5c;
+    }
+
+    /* ===== Cards ===== */
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .card-name {
+      font-size: 17px;
+      font-weight: bold;
+      color: #1a3a5c;
+    }
+
+    .card-name .roman {
+      display: block;
+      font-size: 12px;
+      font-weight: normal;
+      color: #777;
+    }
+
+    .card-meta {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #555;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+    }
+
+    .card-meta span b {
+      color: #333;
+    }
+
+    /* ===== Status badge ===== */
+    .badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    .badge-applying { background: #fef3c7; color: #92600a; }   /* 申請中 */
+    .badge-approved { background: #dcfce7; color: #166534; }   /* 承認 */
+    .badge-rejected { background: #fee2e2; color: #991b1b; }   /* 却下 */
+
+    /* ===== Progress bar ===== */
+    .progress-wrap {
+      margin-top: 12px;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .progress-track {
+      height: 8px;
+      background: #eef1f4;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #1a3a5c;
+      border-radius: 6px;
+      transition: width 0.3s ease;
+    }
+
+    /* ===== Card actions ===== */
+    .card-actions {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-small {
+      padding: 6px 14px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #333;
+      font-family: inherit;
+    }
+    .btn-small:hover { background: #f0f0f0; }
+    .btn-small.danger { color: #b91c1c; border-color: #f0bcbc; }
+    .btn-small.danger:hover { background: #fdeaea; }
+
+    .card-actions select {
+      padding: 6px 8px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+      margin-left: auto;
+    }
+
+    /* ===== Empty state ===== */
+    .empty {
+      text-align: center;
+      padding: 50px 20px;
+      color: #999;
+    }
+    .empty .big { font-size: 40px; margin-bottom: 10px; }
+
+    /* ===== Section titles (form) ===== */
+    .section-title {
+      background-color: #e8eef4;
+      border-left: 4px solid #1a3a5c;
+      padding: 8px 12px;
+      font-weight: bold;
+      font-size: 15px;
+      margin: 20px 0 15px 0;
+      color: #1a3a5c;
+    }
+    .section-title:first-child { margin-top: 0; }
+
+    /* ===== Form rows (reused from immigration form) ===== */
+    .form-row {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      min-height: 45px;
+    }
+    .form-row:last-child { border-bottom: none; }
+
+    .form-label {
+      width: 200px;
+      min-width: 200px;
+      background-color: #f7f9fb;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      border-right: 1px solid #ddd;
+    }
+    .form-label .en {
+      display: block;
+      font-weight: normal;
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .form-value {
+      flex: 1;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-value input[type="text"],
+    .form-value input[type="date"],
+    .form-value input[type="number"],
+    .form-value select {
+      width: 100%;
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-value input:focus,
+    .form-value select:focus {
+      outline: none;
+      border-color: #1a3a5c;
+      box-shadow: 0 0 3px rgba(26, 58, 92, 0.3);
+    }
+
+    .form-row-half { display: flex; }
+    .form-row-half .form-row { flex: 1; }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .required {
+      color: #cc0000;
+      font-size: 11px;
+      margin-left: 5px;
+    }
+
+    .notice {
+      background-color: #fff9e6;
+      border: 1px solid #f0d860;
+      padding: 12px 15px;
+      margin: 20px 0;
+      font-size: 12px;
+      line-height: 1.8;
+      color: #665500;
+    }
+    .notice strong { display: block; margin-bottom: 5px; font-size: 13px; }
+
+    /* ===== Document checklist ===== */
+    .doc-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+    .doc-item:hover { background: #f7f9fb; }
+    .doc-item input { width: 18px; height: 18px; cursor: pointer; }
+    .doc-item .doc-name { font-size: 14px; }
+    .doc-item .doc-name .en {
+      display: block;
+      font-size: 11px;
+      color: #777;
+    }
+    .doc-item.checked { background: #f1f7f1; border-color: #bfe3bf; }
+
+    /* ===== Buttons (footer) ===== */
+    .btn-area {
+      text-align: center;
+      padding: 20px;
+      background-color: #f7f9fb;
+      border-top: 1px solid #ddd;
+    }
+    .btn {
+      padding: 12px 40px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 0 10px;
+      font-family: inherit;
+    }
+    .btn-primary { background-color: #1a3a5c; color: #fff; }
+    .btn-primary:hover { background-color: #2a5a8c; }
+    .btn-secondary { background-color: #fff; color: #333; border: 1px solid #ccc; }
+    .btn-secondary:hover { background-color: #f0f0f0; }
+
+    .sub-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .sub-head .back {
+      font-size: 13px;
+      color: #1a3a5c;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+    }
+    .sub-head .back:hover { text-decoration: underline; }
+    .sub-head h3 { font-size: 18px; color: #1a3a5c; }
+
+    @media (max-width: 600px) {
+      .container { margin: 0; border: none; }
+      .body-area { padding: 18px 16px; }
+      .form-row { flex-direction: column; }
+      .form-label {
+        width: 100%;
+        min-width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+      }
+      .form-row-half { flex-direction: column; }
+      .card-actions select { margin-left: 0; }
+      .btn { padding: 12px 24px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>就労申請 管理</h1>
+    <h2>Work Permit Applications</h2>
+    <div class="form-number">人材派遣 外国人労働者 申請管理（デモ用 / Demo）</div>
+  </div>
+
+  <!-- ======================= 一覧画面 ======================= -->
+  <div id="view-list" class="body-area">
+    <div class="toolbar">
+      <div class="tabs" id="filterTabs">
+        <button class="tab active" data-filter="all">すべて / All</button>
+        <button class="tab" data-filter="申請中">申請中 / Applying</button>
+        <button class="tab" data-filter="承認">承認 / Approved</button>
+        <button class="tab" data-filter="却下">却下 / Rejected</button>
+      </div>
+      <button class="btn btn-primary" style="padding:10px 18px;font-size:14px;margin:0" onclick="openForm()">＋ 新規就労申請 / New</button>
+    </div>
+    <div id="cardList"></div>
+  </div>
+
+  <!-- ======================= フォーム画面 ======================= -->
+  <div id="view-form" class="body-area" style="display:none;">
+    <div class="sub-head">
+      <button class="back" onclick="goList()">← 一覧へ戻る / Back</button>
+      <h3 id="formTitle">新規就労申請</h3>
+    </div>
+
+    <form id="workForm" onsubmit="return false;">
+      <input type="hidden" name="id">
+
+      <div class="section-title">1. 申請者情報 / Applicant Information</div>
+
+      <div class="form-row">
+        <div class="form-label">氏名（漢字）<span class="required">※必須</span>
+          <span class="en">Full Name (Kanji)</span></div>
+        <div class="form-value"><input type="text" name="nameKanji" placeholder="例：グエン バン アン"></div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-label">氏名（ローマ字）<span class="required">※必須</span>
+          <span class="en">Full Name (Roman)</span></div>
+        <div class="form-value"><input type="text" name="nameRoman" placeholder="例：NGUYEN VAN ANH" style="text-transform:uppercase;"></div>
+      </div>
+
+      <div class="form-row-half">
+        <div class="form-row">
+          <div class="form-label">生年月日<span class="required">※必須</span>
+            <span class="en">Date of Birth</span></div>
+          <div class="form-value"><input type="date" name="dob"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">性別<span class="required">※必須</span>
+            <span class="en">Sex</span></div>
+          <div class="form-value">
+            <div class="radio-group">
+              <label><input type="radio" name="sex" value="男 / Male"> 男 / Male</label>
+              <label><input type="radio" name="sex" value="女 / Female"> 女 / Female</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-label">国籍<span class="required">※必須</span>
+          <span class="en">Nationality</span></div>
+        <div class="form-value">
+          <select name="nationality">
+            <option value="">-- 選択してください / Select --</option>
+            <option value="ベトナム / Vietnam">ベトナム / Vietnam</option>
+            <option value="フィリピン / Philippines">フィリピン / Philippines</option>
+            <option value="インドネシア / Indonesia">インドネシア / Indonesia</option>
+            <option value="ミャンマー / Myanmar">ミャンマー / Myanmar</option>
+            <option value="中国 / China">中国 / China</option>
+            <option value="ネパール / Nepal">ネパール / Nepal</option>
+            <option value="タイ / Thailand">タイ / Thailand</option>
+            <option value="その他 / Other">その他 / Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-label">パスポート番号<span class="required">※必須</span>
+          <span class="en">Passport No.</span></div>
+        <div class="form-value"><input type="text" name="passportNo" placeholder="例：M1234567" style="text-transform:uppercase;"></div>
+      </div>
+
+      <div class="section-title">2. 在留資格 / Residence Status</div>
+
+      <div class="form-row">
+        <div class="form-label">在留資格<span class="required">※必須</span>
+          <span class="en">Status of Residence</span></div>
+        <div class="form-value">
+          <select name="residenceType">
+            <option value="">-- 選択してください / Select --</option>
+            <option value="技能実習1号 / Technical Intern (1)">技能実習1号 / Technical Intern (1)</option>
+            <option value="技能実習2号 / Technical Intern (2)">技能実習2号 / Technical Intern (2)</option>
+            <option value="特定技能1号 / Specified Skilled Worker (1)">特定技能1号 / Specified Skilled Worker (1)</option>
+            <option value="特定技能2号 / Specified Skilled Worker (2)">特定技能2号 / Specified Skilled Worker (2)</option>
+            <option value="技術・人文知識・国際業務 / Engineer/Specialist">技術・人文知識・国際業務 / Engineer/Specialist</option>
+            <option value="その他 / Other">その他 / Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-half">
+        <div class="form-row">
+          <div class="form-label">在留カード番号
+            <span class="en">Residence Card No.</span></div>
+          <div class="form-value"><input type="text" name="residenceCardNo" placeholder="例：AB12345678CD" style="text-transform:uppercase;"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">在留期限<span class="required">※必須</span>
+            <span class="en">Period of Stay (Expiry)</span></div>
+          <div class="form-value"><input type="date" name="residenceExpiry"></div>
+        </div>
+      </div>
+
+      <div class="section-title">3. 労働条件 / Work Conditions</div>
+
+      <div class="form-row">
+        <div class="form-label">派遣先企業名<span class="required">※必須</span>
+          <span class="en">Company (Dispatch)</span></div>
+        <div class="form-value"><input type="text" name="company" placeholder="例：株式会社サンプル製作所"></div>
+      </div>
+
+      <div class="form-row-half">
+        <div class="form-row">
+          <div class="form-label">職種<span class="required">※必須</span>
+            <span class="en">Job Type</span></div>
+          <div class="form-value"><input type="text" name="jobType" placeholder="例：金属加工"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">就業場所<span class="required">※必須</span>
+            <span class="en">Workplace</span></div>
+          <div class="form-value"><input type="text" name="workplace" placeholder="例：愛知県豊田市"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-label">雇用形態<span class="required">※必須</span>
+          <span class="en">Employment Type</span></div>
+        <div class="form-value">
+          <div class="radio-group">
+            <label><input type="radio" name="employmentType" value="正社員 / Full-time"> 正社員 / Full-time</label>
+            <label><input type="radio" name="employmentType" value="契約 / Contract"> 契約 / Contract</label>
+            <label><input type="radio" name="employmentType" value="派遣 / Dispatch"> 派遣 / Dispatch</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row-half">
+        <div class="form-row">
+          <div class="form-label">就労開始日<span class="required">※必須</span>
+            <span class="en">Start Date</span></div>
+          <div class="form-value"><input type="date" name="startDate"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">契約期間
+            <span class="en">Contract Period</span></div>
+          <div class="form-value"><input type="text" name="contractPeriod" placeholder="例：1年（更新あり）"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-label">月額賃金（円）<span class="required">※必須</span>
+          <span class="en">Monthly Salary (JPY)</span></div>
+        <div class="form-value"><input type="number" name="salary" placeholder="例：200000" min="0"></div>
+      </div>
+
+      <div class="notice">
+        <strong>ご注意 / Note</strong>
+        本フォームはデモ用です。入力内容はお使いのブラウザ内（localStorage）にのみ保存され、サーバーには送信されません。<br>
+        This is a demo. Data is stored only in your browser (localStorage) and is not sent to any server.
+      </div>
+    </form>
+
+    <div class="btn-area">
+      <button class="btn btn-secondary" onclick="goList()">キャンセル / Cancel</button>
+      <button class="btn btn-primary" onclick="saveForm()">保存 / Save</button>
+    </div>
+  </div>
+
+  <!-- ======================= 書類チェック画面 ======================= -->
+  <div id="view-docs" class="body-area" style="display:none;">
+    <div class="sub-head">
+      <button class="back" onclick="goList()">← 一覧へ戻る / Back</button>
+      <h3>書類チェックリスト</h3>
+    </div>
+    <div id="docsTarget" style="font-size:14px;color:#555;margin-bottom:14px;"></div>
+
+    <div class="progress-wrap" style="margin-bottom:18px;">
+      <div class="progress-label">
+        <span>提出進捗 / Submission Progress</span>
+        <span id="docsCount">0/0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="docsFill" style="width:0%"></div></div>
+    </div>
+
+    <div id="docsList"></div>
+
+    <div class="btn-area">
+      <button class="btn btn-primary" onclick="goList()">完了 / Done</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  "use strict";
+
+  var STORAGE_KEY = "work_applications";
+
+  // 必要書類の定義（nyukan/ の実書類を参考）
+  var DOC_DEFS = [
+    { key: "passport",     ja: "旅券（パスポート）写し",      en: "Copy of Passport" },
+    { key: "residenceCard",ja: "在留カード写し",              en: "Copy of Residence Card" },
+    { key: "pledge",       ja: "申請者の誓約書",              en: "Applicant's Pledge" },
+    { key: "plan",         ja: "技能実習計画 / 雇用契約書",   en: "Training Plan / Employment Contract" },
+    { key: "skillCert",    ja: "技能検定 合格書",             en: "Skill Test Certificate" },
+    { key: "insurance",    ja: "総合保険証",                  en: "Comprehensive Insurance" },
+    { key: "idDoc",        ja: "身分証明書",                  en: "Identification Document" },
+    { key: "checklist",    ja: "申請書類 一覧確認表",         en: "Document Checklist Sheet" }
+  ];
+
+  var REQUIRED_FIELDS = [
+    { name: "nameKanji",      label: "氏名（漢字）" },
+    { name: "nameRoman",      label: "氏名（ローマ字）" },
+    { name: "dob",            label: "生年月日" },
+    { name: "sex",            label: "性別" },
+    { name: "nationality",    label: "国籍" },
+    { name: "passportNo",     label: "パスポート番号" },
+    { name: "residenceType",  label: "在留資格" },
+    { name: "residenceExpiry",label: "在留期限" },
+    { name: "company",        label: "派遣先企業名" },
+    { name: "jobType",        label: "職種" },
+    { name: "workplace",      label: "就業場所" },
+    { name: "employmentType", label: "雇用形態" },
+    { name: "startDate",      label: "就労開始日" },
+    { name: "salary",         label: "月額賃金" }
+  ];
+
+  var currentFilter = "all";
+
+  // ---------- localStorage ヘルパ（try/catchでガード） ----------
+  function loadData() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveData(arr) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    } catch (e) {
+      alert("保存に失敗しました / Failed to save");
+    }
+  }
+
+  // ---------- シードデータ（初回のみ） ----------
+  function seedIfEmpty() {
+    var data = loadData();
+    if (data !== null) return data;
+    var seed = [
+      {
+        id: "seed1",
+        nameKanji: "グエン バン アン", nameRoman: "NGUYEN VAN ANH",
+        dob: "1998-05-12", sex: "男 / Male", nationality: "ベトナム / Vietnam",
+        passportNo: "M1234567",
+        residenceType: "技能実習2号 / Technical Intern (2)",
+        residenceCardNo: "AB12345678CD", residenceExpiry: "2027-03-31",
+        company: "株式会社サンプル製作所", jobType: "金属加工", workplace: "愛知県豊田市",
+        employmentType: "派遣 / Dispatch",
+        startDate: "2025-04-01", contractPeriod: "1年（更新あり）", salary: "210000",
+        status: "承認",
+        documents: { passport: true, residenceCard: true, pledge: true, plan: true, skillCert: false, insurance: true, idDoc: false, checklist: false }
+      },
+      {
+        id: "seed2",
+        nameKanji: "アルダイ ジェフレン", nameRoman: "ALDAY JEFFREN",
+        dob: "2000-11-03", sex: "男 / Male", nationality: "フィリピン / Philippines",
+        passportNo: "P7654321",
+        residenceType: "特定技能1号 / Specified Skilled Worker (1)",
+        residenceCardNo: "CD87654321EF", residenceExpiry: "2026-09-30",
+        company: "サンプル建設株式会社", jobType: "建設（型枠施工）", workplace: "大阪府大阪市",
+        employmentType: "契約 / Contract",
+        startDate: "2025-07-01", contractPeriod: "2年", salary: "235000",
+        status: "申請中",
+        documents: { passport: true, residenceCard: true, pledge: false, plan: true, skillCert: true, insurance: false, idDoc: false, checklist: false }
+      }
+    ];
+    saveData(seed);
+    return seed;
+  }
+
+  // ---------- 画面切替 ----------
+  function showView(id) {
+    ["view-list", "view-form", "view-docs"].forEach(function (v) {
+      document.getElementById(v).style.display = (v === id) ? "block" : "none";
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function goList() {
+    renderList();
+    showView("view-list");
+  }
+
+  // ---------- 一覧描画 ----------
+  function badgeClass(status) {
+    if (status === "承認") return "badge-approved";
+    if (status === "却下") return "badge-rejected";
+    return "badge-applying";
+  }
+
+  function docProgress(rec) {
+    var total = DOC_DEFS.length;
+    var done = 0;
+    var docs = rec.documents || {};
+    DOC_DEFS.forEach(function (d) { if (docs[d.key]) done++; });
+    return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderList() {
+    var data = loadData() || [];
+    var list = document.getElementById("cardList");
+    var filtered = data.filter(function (r) {
+      return currentFilter === "all" || r.status === currentFilter;
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<div class="empty"><div class="big">📋</div>' +
+        '<p>該当する申請がありません</p>' +
+        '<p style="font-size:13px">No applications found</p></div>';
+      return;
+    }
+
+    list.innerHTML = filtered.map(function (r) {
+      var p = docProgress(r);
+      return '' +
+      '<div class="card">' +
+        '<div class="card-head">' +
+          '<div class="card-name">' + esc(r.nameKanji) +
+            '<span class="roman">' + esc(r.nameRoman) + '</span>' +
+          '</div>' +
+          '<span class="badge ' + badgeClass(r.status) + '">' + esc(r.status) + '</span>' +
+        '</div>' +
+        '<div class="card-meta">' +
+          '<span><b>国籍</b> ' + esc(r.nationality) + '</span>' +
+          '<span><b>在留</b> ' + esc(r.residenceType) + '</span>' +
+          '<span><b>派遣先</b> ' + esc(r.company) + '</span>' +
+        '</div>' +
+        '<div class="progress-wrap">' +
+          '<div class="progress-label"><span>書類 / Documents</span><span>' + p.done + '/' + p.total + '</span></div>' +
+          '<div class="progress-track"><div class="progress-fill" style="width:' + p.pct + '%"></div></div>' +
+        '</div>' +
+        '<div class="card-actions">' +
+          '<button class="btn-small" onclick="openForm(\'' + r.id + '\')">編集 / Edit</button>' +
+          '<button class="btn-small" onclick="openDocs(\'' + r.id + '\')">書類 / Docs</button>' +
+          '<button class="btn-small danger" onclick="removeRec(\'' + r.id + '\')">削除 / Delete</button>' +
+          '<select onchange="changeStatus(\'' + r.id + '\', this.value)">' +
+            ['申請中', '承認', '却下'].map(function (s) {
+              return '<option value="' + s + '"' + (r.status === s ? ' selected' : '') + '>' + s + '</option>';
+            }).join('') +
+          '</select>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // ---------- フォーム ----------
+  function openForm(id) {
+    var form = document.getElementById("workForm");
+    form.reset();
+    if (id) {
+      var rec = (loadData() || []).filter(function (r) { return r.id === id; })[0];
+      if (rec) {
+        document.getElementById("formTitle").textContent = "就労申請の編集";
+        form.elements["id"].value = rec.id;
+        ["nameKanji","nameRoman","dob","nationality","passportNo","residenceType",
+         "residenceCardNo","residenceExpiry","company","jobType","workplace",
+         "startDate","contractPeriod","salary"].forEach(function (k) {
+          if (form.elements[k]) form.elements[k].value = rec[k] || "";
+        });
+        setRadio(form, "sex", rec.sex);
+        setRadio(form, "employmentType", rec.employmentType);
+      }
+    } else {
+      document.getElementById("formTitle").textContent = "新規就労申請";
+      form.elements["id"].value = "";
+    }
+    showView("view-form");
+  }
+
+  function setRadio(form, name, value) {
+    var radios = form.elements[name];
+    if (!radios) return;
+    if (radios.length === undefined) radios = [radios];
+    for (var i = 0; i < radios.length; i++) radios[i].checked = (radios[i].value === value);
+  }
+
+  function getVal(form, name) {
+    var el = form.elements[name];
+    if (!el) return "";
+    if (el.length !== undefined && el[0] && el[0].type === "radio") {
+      for (var i = 0; i < el.length; i++) if (el[i].checked) return el[i].value;
+      return "";
+    }
+    return (el.value || "").trim();
+  }
+
+  function saveForm() {
+    var form = document.getElementById("workForm");
+
+    // バリデーション
+    var missing = [];
+    REQUIRED_FIELDS.forEach(function (f) {
+      if (!getVal(form, f.name)) missing.push(f.label);
+    });
+    if (missing.length > 0) {
+      alert("以下の必須項目を入力してください：\n\n・" + missing.join("\n・"));
+      return;
+    }
+    var salary = getVal(form, "salary");
+    if (isNaN(Number(salary)) || Number(salary) < 0) {
+      alert("月額賃金は0以上の数値で入力してください。");
+      return;
+    }
+
+    var data = loadData() || [];
+    var id = getVal(form, "id");
+    var record = {
+      id: id || ("rec" + Date.now()),
+      nameKanji: getVal(form, "nameKanji"),
+      nameRoman: getVal(form, "nameRoman"),
+      dob: getVal(form, "dob"),
+      sex: getVal(form, "sex"),
+      nationality: getVal(form, "nationality"),
+      passportNo: getVal(form, "passportNo"),
+      residenceType: getVal(form, "residenceType"),
+      residenceCardNo: getVal(form, "residenceCardNo"),
+      residenceExpiry: getVal(form, "residenceExpiry"),
+      company: getVal(form, "company"),
+      jobType: getVal(form, "jobType"),
+      workplace: getVal(form, "workplace"),
+      employmentType: getVal(form, "employmentType"),
+      startDate: getVal(form, "startDate"),
+      contractPeriod: getVal(form, "contractPeriod"),
+      salary: salary,
+      status: "申請中",
+      documents: {}
+    };
+
+    if (id) {
+      // 既存：ステータスと書類は維持
+      var idx = -1;
+      for (var i = 0; i < data.length; i++) if (data[i].id === id) { idx = i; break; }
+      if (idx >= 0) {
+        record.status = data[idx].status || "申請中";
+        record.documents = data[idx].documents || {};
+        data[idx] = record;
+      } else {
+        data.push(record);
+      }
+    } else {
+      data.push(record);
+    }
+    saveData(data);
+    goList();
+  }
+
+  // ---------- ステータス変更 / 削除 ----------
+  function changeStatus(id, status) {
+    var data = loadData() || [];
+    data.forEach(function (r) { if (r.id === id) r.status = status; });
+    saveData(data);
+    renderList();
+  }
+
+  function removeRec(id) {
+    if (!confirm("この申請を削除しますか？ / Delete this application?")) return;
+    var data = (loadData() || []).filter(function (r) { return r.id !== id; });
+    saveData(data);
+    renderList();
+  }
+
+  // ---------- 書類チェック ----------
+  var docsCurrentId = null;
+
+  function openDocs(id) {
+    var rec = (loadData() || []).filter(function (r) { return r.id === id; })[0];
+    if (!rec) return;
+    docsCurrentId = id;
+    document.getElementById("docsTarget").innerHTML =
+      "<b>" + esc(rec.nameKanji) + "</b>（" + esc(rec.nameRoman) + "） / " + esc(rec.company);
+    renderDocs(rec);
+    showView("view-docs");
+  }
+
+  function renderDocs(rec) {
+    var docs = rec.documents || {};
+    var list = document.getElementById("docsList");
+    list.innerHTML = DOC_DEFS.map(function (d) {
+      var on = !!docs[d.key];
+      return '' +
+      '<label class="doc-item' + (on ? ' checked' : '') + '">' +
+        '<input type="checkbox" ' + (on ? 'checked' : '') + ' onchange="toggleDoc(\'' + d.key + '\', this.checked)">' +
+        '<span class="doc-name">' + esc(d.ja) + '<span class="en">' + esc(d.en) + '</span></span>' +
+      '</label>';
+    }).join('');
+    updateDocsProgress(rec);
+  }
+
+  function toggleDoc(key, checked) {
+    var data = loadData() || [];
+    var rec = null;
+    data.forEach(function (r) {
+      if (r.id === docsCurrentId) {
+        if (!r.documents) r.documents = {};
+        r.documents[key] = checked;
+        rec = r;
+      }
+    });
+    saveData(data);
+    if (rec) renderDocs(rec);
+  }
+
+  function updateDocsProgress(rec) {
+    var p = docProgress(rec);
+    document.getElementById("docsCount").textContent = p.done + "/" + p.total;
+    document.getElementById("docsFill").style.width = p.pct + "%";
+  }
+
+  // ---------- フィルタタブ ----------
+  document.getElementById("filterTabs").addEventListener("click", function (e) {
+    var btn = e.target.closest(".tab");
+    if (!btn) return;
+    currentFilter = btn.getAttribute("data-filter");
+    var tabs = this.querySelectorAll(".tab");
+    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove("active");
+    btn.classList.add("active");
+    renderList();
+  });
+
+  // ---------- 初期化 ----------
+  seedIfEmpty();
+  renderList();
+</script>
+
+</body>
+</html>
