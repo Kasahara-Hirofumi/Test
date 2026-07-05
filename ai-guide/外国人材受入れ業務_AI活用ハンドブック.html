@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>外国人材受入れ業務 AI活用ハンドブック</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    font-family: "Noto Sans CJK JP", "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.85;
+    color: #1f2937;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  @page { size: A4; margin: 16mm 15mm 18mm 15mm; }
+
+  /* ===== 表紙 ===== */
+  .cover {
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 240mm;
+    text-align: center;
+  }
+  .cover .rule { width: 60mm; height: 2px; background: #1a3a5c; margin: 8mm auto; }
+  .cover .subtitle { font-size: 13pt; color: #1a3a5c; letter-spacing: 0.08em; margin-bottom: 4mm; }
+  .cover h1 { font-size: 27pt; color: #1a3a5c; line-height: 1.5; letter-spacing: 0.06em; }
+  .cover .lead {
+    font-size: 11.5pt; color: #374151; margin: 10mm auto 0;
+    max-width: 140mm; text-align: left; line-height: 2.1;
+  }
+  .cover .edition { margin-top: 14mm; font-size: 10.5pt; color: #6b7280; letter-spacing: 0.15em; }
+
+  /* ===== 目次 ===== */
+  .toc { page-break-after: always; }
+  .toc h2 { font-size: 15pt; color: #1a3a5c; border-bottom: 2px solid #1a3a5c; padding-bottom: 2mm; margin-bottom: 6mm; }
+  .toc table { width: 100%; border-collapse: collapse; }
+  .toc td { padding: 2.4mm 2mm; border-bottom: 1px dotted #cbd5e1; font-size: 11pt; }
+  .toc td.num { width: 22mm; color: #1a3a5c; font-weight: bold; white-space: nowrap; }
+  .toc .note { margin-top: 8mm; }
+
+  /* ===== 章見出し ===== */
+  .chapter { page-break-before: always; }
+  .chapter-head {
+    background: #1a3a5c; color: #fff;
+    padding: 4mm 6mm; margin-bottom: 6mm;
+    border-radius: 1.5mm;
+  }
+  .chapter-head .ch-num { font-size: 9.5pt; opacity: 0.85; letter-spacing: 0.2em; }
+  .chapter-head h2 { font-size: 15.5pt; line-height: 1.5; margin-top: 0.5mm; }
+
+  h3 {
+    font-size: 12pt; color: #1a3a5c;
+    border-left: 4mm solid #1a3a5c;
+    padding-left: 3mm; margin: 7mm 0 3mm;
+    line-height: 1.5;
+  }
+  h4 { font-size: 10.8pt; color: #1a3a5c; margin: 5mm 0 2mm; }
+  p { margin: 2.5mm 0; text-align: justify; }
+  ul, ol { margin: 2.5mm 0 2.5mm 6mm; }
+  li { margin: 1.2mm 0; }
+  strong { color: #14304d; }
+
+  /* ===== ボックス類 ===== */
+  .prompt {
+    background: #f2f6fb;
+    border: 1px solid #b9cbe0;
+    border-left: 4px solid #1a3a5c;
+    border-radius: 1.5mm;
+    padding: 3.5mm 5mm;
+    margin: 4mm 0;
+    page-break-inside: avoid;
+  }
+  .prompt .label {
+    font-weight: bold; color: #1a3a5c; font-size: 9.5pt;
+    margin-bottom: 1.5mm; letter-spacing: 0.05em;
+  }
+  .prompt .body { font-size: 10pt; line-height: 1.9; }
+  .prompt .hint { font-size: 8.8pt; color: #64748b; margin-top: 2mm; }
+
+  .point {
+    background: #fdf8ec;
+    border: 1px solid #e3cf9a;
+    border-radius: 1.5mm;
+    padding: 3.5mm 5mm;
+    margin: 4mm 0;
+    page-break-inside: avoid;
+  }
+  .point .label { font-weight: bold; color: #8a6d1d; font-size: 9.5pt; margin-bottom: 1mm; }
+
+  .caution {
+    background: #fdf1f0;
+    border: 1px solid #e5b6b0;
+    border-radius: 1.5mm;
+    padding: 3.5mm 5mm;
+    margin: 4mm 0;
+    page-break-inside: avoid;
+  }
+  .caution .label { font-weight: bold; color: #a13c30; font-size: 9.5pt; margin-bottom: 1mm; }
+
+  pre.tree {
+    font-family: "Noto Sans Mono CJK JP", monospace;
+    font-size: 9.3pt; line-height: 1.7;
+    background: #f8fafc; border: 1px solid #d7dee8;
+    border-radius: 1.5mm; padding: 3.5mm 5mm; margin: 3mm 0;
+    page-break-inside: avoid;
+  }
+
+  table.std { width: 100%; border-collapse: collapse; margin: 3mm 0; page-break-inside: avoid; }
+  table.std th {
+    background: #e8eef4; color: #1a3a5c; font-size: 9.8pt;
+    border: 1px solid #c3d0dd; padding: 2mm 3mm; text-align: left;
+  }
+  table.std td { border: 1px solid #c3d0dd; padding: 2mm 3mm; font-size: 9.8pt; vertical-align: top; }
+  table.std td.c { text-align: center; white-space: nowrap; }
+
+  .kome { font-size: 9pt; color: #6b7280; }
+  .closing {
+    margin-top: 10mm; padding: 5mm 6mm;
+    background: #e8eef4; border-radius: 1.5mm;
+    page-break-inside: avoid;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 表紙 ============ -->
+<div class="cover">
+  <div class="subtitle">申請書類の作成 ・ 在留期限の管理 ・ 官公庁への報告</div>
+  <h1>外国人材受入れ業務<br>AI活用ハンドブック</h1>
+  <div class="rule"></div>
+  <p class="lead">
+    AIの活用で成果を分けるのは、ITの知識ではありません。<strong>業務をどれだけ知り抜いているか、そして的確な指示が出せるか</strong>です。入管手続きや監理業務のように「正確さ」と「期日」が命の仕事は、実務に精通した人がAIを使ったときに、もっとも効果が出る分野です。<br><br>
+    本書は、外国人材の受入れ実務を対象に、AIアシスタント「Claude（クロード）」を仕事道具として使うための手順と、そのまま使える指示文をまとめた実務プランです。
+  </p>
+  <div class="edition">2026年7月版</div>
+</div>
+
+<!-- ============ 目次 ============ -->
+<div class="toc">
+  <h2>目 次</h2>
+  <table>
+    <tr><td class="num">第１章</td><td>全体像 — 実現したいことと本書の対応</td></tr>
+    <tr><td class="num">第２章</td><td>土台づくり：フォルダとファイルの整理ルール</td></tr>
+    <tr><td class="num">第３章</td><td>Claudeを「チャット」から「仕事道具」へ — 最初に整える設定</td></tr>
+    <tr><td class="num">第４章</td><td>実務レシピ① 入管申請書類の作成（様式への転記）</td></tr>
+    <tr><td class="num">第５章</td><td>実務レシピ② 在留期限の管理と「３か月前アラート」</td></tr>
+    <tr><td class="num">第６章</td><td>実務レシピ③ 定期報告書と受入企業への依頼メール</td></tr>
+    <tr><td class="num">第７章</td><td>実務レシピ④ 労働局・有料職業紹介の整理と報告</td></tr>
+    <tr><td class="num">第８章</td><td>官公庁の様式・制度改正の月次チェック</td></tr>
+    <tr><td class="num">第９章</td><td>個人情報を扱うときの５つのルール</td></tr>
+    <tr><td class="num">第10章</td><td>手戻りを減らす指示の出し方 ７つのコツ</td></tr>
+    <tr><td class="num">第11章</td><td>導入スケジュール — 最初の４週間</td></tr>
+  </table>
+  <div class="point note">
+    <div class="label">本書の使い方</div>
+    <p>最初に第１〜３章で土台を整え、あとは必要な業務のレシピ（第４〜８章）だけを開いてください。青い囲みの「指示文」は、〔　〕の中を書き換えてそのままClaudeに貼り付けて使えます。</p>
+  </div>
+</div>
+
+<!-- ============ 第1章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 １ 章</div>
+    <h2>全体像 — 実現したいことと本書の対応</h2>
+  </div>
+
+  <p>まず、実務で実現したいことを整理します。いずれも<strong>プログラミングは不要</strong>で、Claudeの標準機能と、Excel・Wordの範囲で実現できます。</p>
+
+  <table class="std">
+    <tr><th style="width:8mm;">＃</th><th>実現したいこと</th><th style="width:30mm;">対応する章</th></tr>
+    <tr><td class="c">１</td><td>申請情報を保管したフォルダとClaudeをつなぎ、企業名・対象者を指定して入管向けの申請書類（申請書＋説明資料）を作成する</td><td class="c">第２・３・４章</td></tr>
+    <tr><td class="c">２</td><td>在留カード等の在留資格情報に基づき、更新作業の日程を一覧化し、事前にアラートを出す</td><td class="c">第５章</td></tr>
+    <tr><td class="c">３</td><td>更新の３か月前に、受入企業へ必要書類を依頼するメール案を用意する</td><td class="c">第５・６章</td></tr>
+    <tr><td class="c">４</td><td>入管・外国人技能実習機構への定期報告書の作成を支援する</td><td class="c">第６章</td></tr>
+    <tr><td class="c">５</td><td>労働局向けの雇用募集情報（有料職業紹介）を整理し、報告書を作成する</td><td class="c">第７章</td></tr>
+    <tr><td class="c">６</td><td>頻繁に更新される官公庁の様式・制度改正を定期的にチェックする</td><td class="c">第８章</td></tr>
+  </table>
+
+  <h3>AIとの役割分担 — 「作業」は任せ、「判断」は渡さない</h3>
+  <p>Claudeは、<strong>仕事の速い新人アシスタント</strong>だと考えるのが一番実態に近い捉え方です。転記・下書き・照合・一覧化・文案づくりといった「作業」は速く正確にこなしますが、制度の解釈や受入企業との調整といった「判断」はできません。判断と最終確認は経験のある実務者の仕事であり、そこは今までどおり変わりません。</p>
+  <div class="point">
+    <div class="label">ここがポイント</div>
+    <p>良い成果物は、良い指示から生まれます。営業でいう「段取り」と同じで、<strong>先に完成形（様式や過去の完成品）を見せてから作らせる</strong>のが鉄則です。一度うまくいった指示文は、トークスクリプトのように保存して使い回します。この考え方だけで、AI活用の失敗の大半（手戻り）は防げます。</p>
+  </div>
+</div>
+
+<!-- ============ 第2章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ２ 章</div>
+    <h2>土台づくり：フォルダとファイルの整理ルール</h2>
+  </div>
+
+  <p>AIも人も、<strong>「探せる形」で置いてある情報しか使えません</strong>。フォルダの整理はAI活用の準備の８割を占める、もっとも効果の大きい投資です。すでに「発生時点で企業ごとに保管し、紙はスキャンしてPDF化する」という運用ができているなら、あとはそれを<strong>誰が見ても（AIが見ても）分かるルール</strong>に統一するだけです。</p>
+
+  <h3>２-１　推奨フォルダ構成</h3>
+  <pre class="tree">
+外国人材業務／
+├─ 00_台帳／
+│    └─ 就労者台帳.xlsx　……全員の基本情報と期限を集約（第５章）
+├─ 01_様式集／
+│    └─ 20260701取得_在留期間更新許可申請書.docx　など官公庁の最新様式
+├─ 02_企業別／
+│    ├─ 株式会社サンプル工業／
+│    │    ├─ 企業情報（登記・決算等）／
+│    │    └─ GARCIA_JUAN／
+│    │         ├─ 20250429_在留カード.pdf
+│    │         ├─ 20250420_技能実習計画認定通知.pdf
+│    │         └─ 20250415_雇用条件書.pdf
+│    └─ 株式会社サンプル食品／ …（同じ構成）
+└─ 03_提出済み書類／
+     └─ 2026年度／　……提出した申請・報告の控え（提出日を名前に）
+  </pre>
+
+  <h3>２-２　ファイル名の付け方 — ３つだけのルール</h3>
+  <ol>
+    <li><strong>日付から始める</strong>：西暦８桁（例：20260705）。書類の日付か入手日。並べただけで時系列になります。</li>
+    <li><strong>日付＋書類名＋（対象者名）</strong>：例「20260705_在留期間更新許可申請書_GARCIA.pdf」。</li>
+    <li><strong>スキャンしたその場でリネームして所定の場所へ</strong>。「あとでまとめて」が一番の事故のもとです。</li>
+  </ol>
+
+  <div class="point">
+    <div class="label">なぜこれがAI活用の土台になるのか</div>
+    <p>Claudeに「株式会社サンプル工業のGARCIAさんの更新申請を作って」と頼んだとき、フォルダと名前が整っていれば、渡すべきファイルが迷わず特定できます。整っていないと、毎回ファイル探しから始まり、渡し間違い（＝手戻り）が起きます。<strong>フォルダの秩序が、そのままAIの精度になります。</strong></p>
+  </div>
+
+  <h3>２-３　台帳（Excel）を情報の「本店」にする</h3>
+  <p>現在お使いの就労者名簿（氏名・認定番号・就労企業・区分・パスポート番号・在留カード番号・入国日など）は、すでに台帳の骨格ができています。ここに次の列を足すと、申請・報告・期限管理のすべての起点になります。</p>
+  <ul>
+    <li><strong>在留資格／在留期限</strong>（在留カードの記載どおり）</li>
+    <li><strong>次回更新の目安日</strong>（在留期限の３か月前）</li>
+    <li><strong>実習計画の認定日・区分の切替時期、定期報告の期日</strong></li>
+    <li><strong>状況メモ</strong>（申請準備中／提出済み／許可待ち　など）</li>
+  </ul>
+  <p>この改修作業自体もClaudeに任せられます（第５章にそのままの指示文があります）。<strong>「台帳を開けば全員の状況が１分で分かる」</strong>が完成形です。</p>
+</div>
+
+<!-- ============ 第3章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ３ 章</div>
+    <h2>Claudeを「チャット」から「仕事道具」へ — 最初に整える設定</h2>
+  </div>
+
+  <p>Claudeを一問一答のチャットとして使うのは、性能の一部しか使っていない状態です。次の３つを一度だけ設定すると、<strong>毎回ゼロから事情を説明する必要がなくなり</strong>、回答の的中率が大きく上がります。</p>
+
+  <h3>３-１　「プロジェクト」— 業務ごとの専用の作業部屋</h3>
+  <p>プロジェクトとは、<strong>資料と指示をあらかじめ覚えさせておける専用の部屋</strong>です。部屋に入れた資料（台帳・様式・過去の完成品）は、その部屋での会話で毎回参照されます。画面左の「プロジェクト」から作成できます。業務ごとに分けるのがコツです。</p>
+  <table class="std">
+    <tr><th>作るプロジェクト</th><th>中に入れておく資料</th></tr>
+    <tr><td>入管申請書類</td><td>就労者台帳、申請様式一式、過去に提出した申請書の控え</td></tr>
+    <tr><td>機構・定期報告</td><td>報告様式、前回提出した報告書</td></tr>
+    <tr><td>労働局・職業紹介</td><td>紹介実績の記録表、事業報告書の様式</td></tr>
+  </table>
+  <p class="kome">※ プロジェクトが画面に見当たらない場合は、有料プランへの切り替えで利用できます。書類業務に本格的に使うなら、有料プランの費用は十分に回収できる投資です。</p>
+
+  <h3>３-２　プロジェクトの「指示」欄 — 毎回の前置きを不要にする</h3>
+  <p>各プロジェクトには「指示」を書いておく欄があります。ここに仕事の前提を書いておくと、以後すべての会話に自動で適用されます。記入例：</p>
+  <div class="prompt">
+    <div class="label">■ プロジェクトの指示欄に書いておく文例</div>
+    <div class="body">あなたは監理団体（協同組合）の事務アシスタントです。技能実習制度・特定技能制度に関する書類作成を手伝います。<br>
+    ・文書は日本語の丁寧なビジネス文書とし、日付は西暦で表記すること。<br>
+    ・氏名のローマ字・カタカナ表記は、台帳の表記を一字一句そのまま使うこと。<br>
+    ・資料にない項目は<strong>推測で埋めず、空欄のままにして、最後に「要確認リスト」として一覧にする</strong>こと。</div>
+  </div>
+  <p>特に最後の一行が重要です。AIの失敗で一番危険なのは「もっともらしい穴埋め」ですが、この一行でそれを禁止できます。</p>
+
+  <h3>３-３　ファイルの渡し方 — 添付が基本、フォルダ連携は次の段階</h3>
+  <ul>
+    <li><strong>基本は添付</strong>：ExcelやPDFを会話画面にドラッグ＆ドロップ（つまんで放り込む）するだけで読み込みます。写真・スキャンPDFの文字も読み取れます。</li>
+    <li><strong>フォルダ連携</strong>：パソコン用のClaudeアプリには、指定したフォルダの中のファイルを直接読み書きできる機能があります（プランやバージョンにより利用可否が異なります）。メニューに見当たらなくても、当面はドラッグ＆ドロップの添付で実務には十分です。</li>
+    <li><strong>成果物はファイルで受け取る</strong>：「Excelファイルで出力して」「Word文書にして」と頼めば、ダウンロードできるファイルとして納品させられます。</li>
+  </ul>
+
+  <h3>３-４　モデル（頭脳）の使い分け</h3>
+  <p>画面上部でClaudeの「モデル」を切り替えられます。使い分けは単純で、<strong>軽い作業（メール文案・要約）は標準モデル、重要書類や複雑な整理はじっくり考える上位モデル</strong>。迷ったら上位モデルで構いません。</p>
+</div>
+
+<!-- ============ 第4章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ４ 章</div>
+    <h2>実務レシピ① 入管申請書類の作成（様式への転記）</h2>
+  </div>
+
+  <p>WordやExcelの参考様式に、台帳や在留カードの情報を転記していく作業は、Claudeがもっとも得意とする仕事です。手順は毎回同じ４つです。</p>
+  <ol>
+    <li>プロジェクト「入管申請書類」を開く（台帳と様式は入れてある状態）</li>
+    <li>下の指示文を貼り付け、〔　〕を書き換えて送る</li>
+    <li>出てきた下書きを点検し、直したい箇所だけピンポイントで修正指示</li>
+    <li>完成したらWord／Excelファイルで出力させ、所定フォルダに保存</li>
+  </ol>
+
+  <div class="prompt">
+    <div class="label">■ 指示文：申請書類の下書き作成（〔 〕を書き換えて使用）</div>
+    <div class="body">添付の①就労者台帳と②申請様式を使います。〔株式会社サンプル工業〕の〔GARCIA JUAN〕さんについて、②の様式に必要事項を転記した下書きを作ってください。<br>
+    ・台帳にない項目は空欄のままにし、最後に「要確認リスト」としてまとめてください。<br>
+    ・氏名のローマ字は台帳の表記どおり、日付はすべて西暦で。<br>
+    ・完成後、「どの項目に・どの資料から・何を転記したか」の一覧表も付けてください。</div>
+    <div class="hint">※「転記の一覧表」を付けさせるのがコツです。点検が突き合わせ作業になり、確認時間が大幅に短くなります。</div>
+  </div>
+
+  <div class="prompt">
+    <div class="label">■ 指示文：申請に添える説明資料</div>
+    <div class="body">いま作成した申請について、受入企業の担当者に渡す説明資料をＡ４一枚で作ってください。内容は「申請の趣旨」「今後の流れと標準的な所要期間」「企業側にお願いする準備物」の３部構成で、Word文書で出力してください。</div>
+  </div>
+
+  <div class="caution">
+    <div class="label">必ず守る点検ルール</div>
+    <p><strong>氏名・生年月日・在留カード番号・パスポート番号・日付</strong>は、提出前に必ず原本（スキャンPDF）と突き合わせてください。AIの下書きは「新人が作った清書前の書類」です。最終チェックの目だけは、経験者にしか務まりません。</p>
+  </div>
+</div>
+
+<!-- ============ 第5章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ５ 章</div>
+    <h2>実務レシピ② 在留期限の管理と「３か月前アラート」</h2>
+  </div>
+
+  <p>期限管理は<strong>二段構え</strong>にします。（Ａ）台帳を開けば色で危険度が分かる状態にしておく。（Ｂ）月に一度、台帳をClaudeに点検させ、「誰の・何を・いつまでに」の作業リストとメール案まで作らせる。この２つで、期限の見落としは仕組みとして防げます。</p>
+
+  <h3>５-Ａ　台帳を「期限管理台帳」に作り替える（最初に一度だけ）</h3>
+  <div class="prompt">
+    <div class="label">■ 指示文：期限管理台帳への改修</div>
+    <div class="body">添付の就労者名簿を、期限管理ができる台帳に作り替えてください。<br>
+    ・列：氏名／日本語表記／就労企業／在留資格・実習区分／在留期限／期限までの残り日数（自動計算）／次回更新の目安日（期限の３か月前）／状況メモ<br>
+    ・在留期限が90日以内の行は黄色、30日以内の行は赤色になるよう「条件付き書式」を設定してください。<br>
+    ・元の名簿にある情報（認定番号・パスポート番号・在留カード番号・入国日など）の列もそのまま残し、Excelファイルで出力してください。</div>
+  </div>
+  <p>以後、新しい受入れが発生したら台帳に１行足すだけです。<strong>開いた瞬間に、色で「急ぎ」が分かる台帳</strong>になります。</p>
+
+  <h3>５-Ｂ　月初10分の定期点検（毎月１日の定例作業）</h3>
+  <div class="prompt">
+    <div class="label">■ 指示文：月初の期限点検（毎月これを送るだけ）</div>
+    <div class="body">添付の台帳を確認し、本日から90日以内に在留期限・実習区分の切替・定期報告の期日が来る人を、期限が近い順に一覧にしてください。<br>
+    各人について、①必要な手続きの名称、②受入企業に依頼する書類、③その依頼メールの下書き案、を作成してください。60日以内の案件には【至急】と付けてください。</div>
+  </div>
+
+  <div class="point">
+    <div class="label">アラートの仕組みについて（正直な注意点）</div>
+    <p>AIは自分から動いて通知してくることはありません。アラートの起点は<strong>「毎月１日に台帳を点検させる」という定例作業</strong>です。人の記憶に頼らないよう、パソコンやスマートフォンのカレンダーに「毎月１日：台帳点検」を繰り返し予定として登録してください。定例作業＋色付き台帳＋Claudeの点検、と三重にしておけば、抜けはまず起きません。個別の重要期限は、Claudeに「カレンダー登録用の一覧（日付・件名）」を作らせて転記すれば確実です。</p>
+  </div>
+</div>
+
+<!-- ============ 第6章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ６ 章</div>
+    <h2>実務レシピ③ 定期報告書と受入企業への依頼メール</h2>
+  </div>
+
+  <h3>６-１　入管・機構への定期報告書</h3>
+  <p>監査報告や訪問指導の記録など、<strong>様式が決まっていて前回分がある書類</strong>は、AIとの相性が抜群です。「様式」「前回の完成品」「今回の情報」の３点セットを渡すのがコツです。</p>
+  <div class="prompt">
+    <div class="label">■ 指示文：定期報告書の下書き</div>
+    <div class="body">添付は、①報告様式、②前回提出した報告書、③今回の対象情報です。<br>
+    ②の書きぶり・文体を踏襲して、今回分の下書きを作成してください。<br>
+    ・数値・日付・固有名詞は③のみを根拠にすること。<br>
+    ・③に根拠のない箇所は空欄にして「要確認リスト」にまとめること。<br>
+    ・前回から様式が変わっている場合は、変更点を先に指摘してください。</div>
+  </div>
+
+  <h3>６-２　受入企業への書類依頼メール（３か月前アラートとセット）</h3>
+  <p>第５章の月初点検で「依頼が必要な人」が挙がったら、そのままメール文案を作らせます。</p>
+  <div class="prompt">
+    <div class="label">■ 指示文：必要書類の依頼メール</div>
+    <div class="body">〔株式会社サンプル工業〕のご担当者宛てに、〔GARCIA JUAN〕さんの在留期間更新に必要な書類（〔雇用条件書、賃金台帳の写し、出勤簿の写し〕）を〔８月20日〕までにご準備いただくお願いのメールを作成してください。<br>
+    ・相手は多忙な総務担当者。用件が一目で分かる件名にしてください。<br>
+    ・依頼する書類は箇条書きの一覧にし、提出方法と期限を明記してください。<br>
+    ・文面は丁寧、ただし簡潔に。</div>
+  </div>
+  <div class="point">
+    <div class="label">ここがポイント</div>
+    <p>出来のよかったメールは、プロジェクトに<strong>「定型文」として保存</strong>してください。次回からは「この定型文で、宛先と対象者と期限だけ差し替えて」の一言で済みます。使うほど自分専用の文例集が育っていきます。</p>
+  </div>
+</div>
+
+<!-- ============ 第7章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ７ 章</div>
+    <h2>実務レシピ④ 労働局・有料職業紹介の整理と報告</h2>
+  </div>
+
+  <h3>７-１　紹介実績を「１枚のExcel」に集める</h3>
+  <p>職業紹介関係は、報告の時期に情報をかき集めるのではなく、<strong>発生の都度、記録表に１行ずつ書き足していく</strong>方式に変えるのが決定打です。記録表そのものもClaudeに作らせます。</p>
+  <div class="prompt">
+    <div class="label">■ 指示文：紹介実績の記録表づくり（最初に一度だけ）</div>
+    <div class="body">有料職業紹介事業の実績を記録するExcel表を作ってください。<br>
+    ・列：受付日／求人企業／職種／求人数／求職者名／国籍／紹介日／採用・不採用／就職日／離職日（あれば）／手数料／備考<br>
+    ・年度（４月〜翌３月）ごとに集計しやすいよう、集計用のシートも付けて、Excelファイルで出力してください。</div>
+  </div>
+
+  <h3>７-２　労働局への事業報告書</h3>
+  <p>記録表さえ付けていれば、年に一度の職業紹介事業報告書は「集計させて、様式に転記させる」だけになります。</p>
+  <div class="prompt">
+    <div class="label">■ 指示文：事業報告書のための集計</div>
+    <div class="body">添付の紹介実績の記録表から、〔2025〕年度（４月１日〜３月31日）分について、職業紹介事業報告書に必要な集計（有効求人数・求職者数・就職件数・手数料の合計など）を項目別に出してください。それぞれの数字について、集計の根拠となった行の番号も添えてください。</div>
+    <div class="hint">※「根拠の行番号も添えて」が点検を楽にする一言です。数字の検算がすぐできます。</div>
+  </div>
+  <p>報告書の提出期限は、第５章の台帳・カレンダーに年間予定として入れておきます。</p>
+</div>
+
+<!-- ============ 第8章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ８ 章</div>
+    <h2>官公庁の様式・制度改正の月次チェック</h2>
+  </div>
+
+  <p>官公庁の様式や運用は頻繁に変わります。これも「気づいたら変わっていた」ではなく、<strong>月初の定例作業（第５章とセット）</strong>に組み込みます。Claudeにはウェブ検索をさせて、要点だけ報告させます。</p>
+
+  <div class="prompt">
+    <div class="label">■ 指示文：月次の制度・様式チェック（毎月１日に送る）</div>
+    <div class="body">ウェブ検索を使って、直近１か月に発表された次の情報を確認し、監理団体の実務に影響がある変更点だけを箇条書きで報告してください。出典のページも示してください。<br>
+    ①出入国在留管理庁：技能実習・特定技能関係の様式変更や運用の変更<br>
+    ②外国人技能実習機構：届出・報告様式の変更、通知<br>
+    ③厚生労働省：職業紹介事業関係の改正<br>
+    ④育成就労制度：施行に向けた新しい発表</div>
+  </div>
+
+  <table class="std">
+    <tr><th>確認先（公式サイト）</th><th>アドレス</th></tr>
+    <tr><td>出入国在留管理庁</td><td>www.moj.go.jp/isa/</td></tr>
+    <tr><td>外国人技能実習機構（OTIT）</td><td>www.otit.go.jp</td></tr>
+    <tr><td>厚生労働省（職業紹介事業）</td><td>www.mhlw.go.jp</td></tr>
+  </table>
+
+  <div class="caution">
+    <div class="label">様式は必ず「提出直前に」公式サイトから</div>
+    <p>AIの検索報告は「変更の見出しに気づく」ためのものです。<strong>提出に使う様式は、必ず提出直前に公式サイトから最新版をダウンロード</strong>し、「01_様式集」フォルダに取得日付きの名前（例：20260701取得_○○様式.docx）で保存してください。技能実習から育成就労制度への移行期は、特に様式の変更が続くと見込まれるため、この月次チェックの価値が大きくなります。</p>
+  </div>
+</div>
+
+<!-- ============ 第9章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 ９ 章</div>
+    <h2>個人情報を扱うときの５つのルール</h2>
+  </div>
+
+  <p>在留カード・パスポート・賃金情報など、この業務で扱うのは特に慎重さが求められる個人情報です。AIに限らず、クラウドサービス全般に共通する基本動作として、次の５つを守ってください。</p>
+
+  <table class="std">
+    <tr><th style="width:10mm;">＃</th><th>ルール</th><th>具体的には</th></tr>
+    <tr><td class="c">１</td><td><strong>学習利用をオフにする</strong></td><td>Claudeの「設定」→「プライバシー」で、入力内容をモデルの改善（学習）に使う設定がオフになっていることを確認する（名称は画面により多少異なります）。</td></tr>
+    <tr><td class="c">２</td><td><strong>会社の方針に従う</strong></td><td>外部サービスへの個人情報の入力について、社内の取り決めを確認する。迷う情報は入れない、または番号等を伏せて渡す。</td></tr>
+    <tr><td class="c">３</td><td><strong>渡すのは必要最小限</strong></td><td>その作業に必要なファイルだけを添付する。関係のない人の情報まで一括で渡さない。</td></tr>
+    <tr><td class="c">４</td><td><strong>正式な保管場所は自社フォルダ</strong></td><td>チャットの履歴を書類の保管庫代わりにしない。完成した書類は必ずファイルで出力し、第２章のフォルダに保存する。</td></tr>
+    <tr><td class="c">５</td><td><strong>アカウントを守る</strong></td><td>パスワードの使い回しをしない。共有パソコンでは使い終わったらログアウトする。</td></tr>
+  </table>
+
+  <p>この５つを守っていれば、AIの業務利用は過度に恐れる必要はありません。<strong>「紙の書類を鍵のかかる棚に入れる」のと同じ、置き場所と渡し方の管理</strong>の問題です。</p>
+</div>
+
+<!-- ============ 第10章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 10 章</div>
+    <h2>手戻りを減らす指示の出し方 ７つのコツ</h2>
+  </div>
+
+  <p>AI活用の不満の大半は「思ったものと違うものが出てくる」ことですが、その原因のほとんどは指示の側で防げます。ベテランが新人に仕事を頼むときの要領と、まったく同じです。</p>
+
+  <table class="std">
+    <tr><th style="width:10mm;">＃</th><th>コツ</th><th>やり方</th></tr>
+    <tr><td class="c">１</td><td><strong>完成形を先に見せる</strong></td><td>様式・過去の完成品・記入例を渡してから作らせる。口頭（文章）だけの説明より、見本一つのほうが正確に伝わる。</td></tr>
+    <tr><td class="c">２</td><td><strong>１業務＝１チャット</strong></td><td>話題が変わったら新しいチャットを開く。長い会話に何件も詰め込むと、前の案件の情報が混ざる。</td></tr>
+    <tr><td class="c">３</td><td><strong>勝手な穴埋めを禁止する</strong></td><td>「分からない項目は空欄＋要確認リスト」を指示に必ず入れる（第３章の指示欄に書いておけば自動）。</td></tr>
+    <tr><td class="c">４</td><td><strong>修正はピンポイントで</strong></td><td>「全部やり直し」ではなく「２枚目の日付だけ直して」。全体を作り直させると、直っていた所まで変わることがある。</td></tr>
+    <tr><td class="c">５</td><td><strong>指示文を資産にする</strong></td><td>うまくいった指示文は保存して使い回す。営業のトークスクリプトと同じで、磨くほど精度が上がる。</td></tr>
+    <tr><td class="c">６</td><td><strong>説明よりも添付</strong></td><td>「先月渡したあの資料」は通じない。前提となる資料は、その会話にあらためて添付する。</td></tr>
+    <tr><td class="c">７</td><td><strong>数字と固有名詞は人が照合</strong></td><td>氏名・番号・日付・金額は必ず原本と突き合わせる。ここだけは省力化しない。</td></tr>
+  </table>
+
+  <div class="point">
+    <div class="label">困ったときは、Claude本人に聞く</div>
+    <p>操作方法や設定も、Claude自身に日本語で質問できます。「プロジェクトの作り方を教えて」「さっきの表をExcelで出力し直して」など、<strong>分からないことを分からないと言える相手</strong>として使ってください。それが一番の近道です。</p>
+  </div>
+</div>
+
+<!-- ============ 第11章 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div class="ch-num">第 11 章</div>
+    <h2>導入スケジュール — 最初の４週間</h2>
+  </div>
+
+  <p>一気に全部を変える必要はありません。<strong>１週間に１テーマ</strong>、実際の案件１件で試しながら定着させるのが、結局いちばん速い進め方です。</p>
+
+  <table class="std">
+    <tr><th style="width:22mm;">週</th><th>やること</th><th style="width:34mm;">ゴール</th></tr>
+    <tr>
+      <td class="c"><strong>第１週</strong><br>土台</td>
+      <td>・プライバシー設定の確認（第９章）<br>・フォルダ構成とファイル名ルールを決め、まず１社分だけ整理（第２章）<br>・プロジェクト「入管申請書類」を作成し、台帳・様式・指示文を登録（第３章）</td>
+      <td>作業部屋が１つ完成</td>
+    </tr>
+    <tr>
+      <td class="c"><strong>第２週</strong><br>書類作成</td>
+      <td>・台帳を期限管理台帳に改修（第５章Ａ）<br>・申請書類１件をAIで下書きし、従来の手作業と突き合わせて精度を確認（第４章）</td>
+      <td>下書き→点検→完成の流れを体得</td>
+    </tr>
+    <tr>
+      <td class="c"><strong>第３週</strong><br>期限管理</td>
+      <td>・月初点検を一度実施（第５章Ｂ）<br>・カレンダーに「毎月１日：台帳点検」を登録<br>・依頼メールの定型文を１本作って保存（第６章）</td>
+      <td>アラートの仕組みが稼働</td>
+    </tr>
+    <tr>
+      <td class="c"><strong>第４週</strong><br>報告・定着</td>
+      <td>・定期報告書１本をAI併用で作成（第６章）<br>・紹介実績の記録表を作成（第７章）<br>・様式・制度改正の月次チェックを開始（第８章）</td>
+      <td>月次ルーチンが完成</td>
+    </tr>
+  </table>
+
+  <p>最初の１か月は、AIの成果物と従来のやり方を<strong>並走</strong>させてください。精度と時間短縮の効果を自分の目で確かめてから本格移行するのが、確実で安全な進め方です。</p>
+
+  <div class="closing">
+    <p><strong>おわりに</strong>　—　本書のレシピは、どれも「様式を渡す → 下書きさせる → 経験者の目で点検する」という同じ型でできています。制度と現場を知る実務者の判断力に、AIの作業スピードを組み合わせる。それがこの分野でのAI活用の最短距離です。まずは第１週の３項目から始めてください。</p>
+  </div>
+</div>
+
+</body>
+</html>
